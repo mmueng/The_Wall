@@ -1,0 +1,89 @@
+﻿
+@using The_Wall.Models
+
+@model ViewModel
+<div class="container">
+     <a href="Logout" class="btn btn-primary">LogOut</a>
+    <div >
+        <form asp-action="PostMsg" asp-controller="Home" method="post">   
+                <span asp-validation-for="NewMsg.Message"></span>
+                <label asp-for="NewMsg.Message">Post a message</label>
+                <!-- <textarea name="NewMsg.Message" id="" cols="50" rows="3"></textarea> -->
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Post a message</span>
+                    </div>
+                    <textarea name="NewMsg.Message" class="form-control" aria-label="With textarea"></textarea>
+            <input type="hidden" value="NewUser.UserID">
+            <input type="submit" value="Post a Message!">
+                </div>   
+        </form>
+    </div>
+    <div>
+
+            
+                @foreach(var msg in @ViewBag.AllMsgs)
+                {
+           
+                        <div class="card">
+                            <div class="card-header">
+                                @msg.MsgCreator.FirstName @msg.MsgCreator.LastName
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">@msg.Message</h5>
+                                @if(@ViewBag.live_user.UserId == @msg.UserId)
+                                {
+                                <a href="Delete/@msg.MessageId" class="btn btn-primary">Delete</a>
+
+                                }
+                                
+                            </div>
+                            <div class="card-header">
+                               @msg.CreatedAt
+                            </div>
+                        </div>
+
+
+
+                  
+                
+                        @foreach(var a in @Model.AllComments)
+                        {
+                            if(@a.MessageId == @msg.MessageId)
+                            {
+                                
+                                 <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">@a.CommentCreator.FirstName @a.CommentCreator.LastName </span>
+                                    </div>
+                                    <div class="card" style="width: 28rem;">
+                                        <div class="card-body">
+                                            @a.Comment
+                                        </div>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">@a.CreatedAt</span>
+                                    </div>
+                                </div>
+                                    
+                            
+                            } 
+                        }
+                            <form asp-action="PostComment" asp-controller="Home" method="post">    
+                                <section>
+                                    <span asp-validation-for="NewComment.Comment"></span>
+                                    <label asp-for="NewComment.Comment">Post a Comment</label>
+                                     
+                                     <input class="form-control" name="NewComment.Comment">
+                                            
+                                </section>                          
+
+                                <input type="hidden" asp-for="NewComment.MessageId"  value="@msg.MessageId">
+                                <input type="submit" value="Post a Comment!">
+                            </form>
+                 
+                
+                }
+            
+    </div>
+</div>
